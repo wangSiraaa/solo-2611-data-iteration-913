@@ -91,11 +91,20 @@ def main(argv: list[str] | None = None) -> int:
     reopen_parser.add_argument("db_dir")
     reopen_parser.add_argument("plan_id")
 
+    sub.add_parser(
+        "xregion-examples",
+        help="run the two worked cross-region examples (anonymous products)",
+    )
+
     args = parser.parse_args(argv)
     if args.command == "run":
         report = run_material(args.input, args.db_dir)
         print(json.dumps(report, indent=2, ensure_ascii=False))
         return 0
+    if args.command == "xregion-examples":
+        from .xregion import main as xregion_main
+
+        return xregion_main()
     db_dir = Path(args.db_dir)
     catalog = Catalog.open(db_dir / "catalog.db")
     publisher = Publisher(db_dir / "plans.db", catalog)
